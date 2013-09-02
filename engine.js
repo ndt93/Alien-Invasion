@@ -71,3 +71,22 @@ var SpriteSheet = new function() {
                       s.w, s.h);
     };
 };
+
+var TitleScreen = function TitleScreen(title, subtitle, callback) {
+  this.step = function (dt) {
+    if (Game.keys['fire'] && callback) {
+      callback();
+    }
+  };
+
+  this.draw = function(ctx) {
+    ctx.fillStyle = "#FFFFFF";
+    ctx.textAlign = "center";
+
+    ctx.font = "bold 40px Banger";
+    ctx.fillText(title, Game.width/2, Game.height/2);
+
+    ctx.font = "bold 20px Banger";
+    ctx.fillText(subtitle, Game.width/2, Game.height/2 + 40);
+  };
+}
