@@ -13,7 +13,9 @@ function startGame() {
 }
 
 function playGame() {
-    Game.setBoard(3, new PlayerShip());
+    var board = new GameBoard();
+    board.add(new PlayerShip());
+    Game.setBoard(3, board);
 }
 
 var Starfield = function(speed, opacity, numStars, clear) {
