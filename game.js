@@ -1,4 +1,5 @@
-var sprites =  { ship: {sx: 0, sy: 0, w: 18, h: 35, frame: 3} };
+var sprites =  { ship: {sx: 0, sy: 0, w: 18, h: 35, frame: 3},
+                 missile: {sx: 0, sy: 30, w: 2, h: 10, frames: 1} };
 
 window.addEventListener("load", function() {
     Game.initialize("game", sprites, startGame);
@@ -67,6 +68,8 @@ var PlayerShip = function () {
     this.x = Game.width/2 - this.w / 2;
     this.y = Game.height - 10 - this.h;
     this.vx = 0;
+    this.reloadTime = 0.25;
+    this.reload = this.reloadTime;
 
     this.step = function(dt) {
         var maxVel = 200;
@@ -80,9 +83,36 @@ var PlayerShip = function () {
         else if (this.x > Game.width - this.w) {
             this.x = Game.width - this.w;
         }
+
+        this.reload -= dt;
+        if (Game.keys['fire'] && this.reload < 0) {
+            Game.keys['fire'] = false;
+            this.reload = this.reloadTime;
+            this.board.add(new PlayerMissile(this.x, this.y+this.h/2));
+            this.board.add(new PlayerMissile(this.x+this.w, this.y+this.h/2));
+        }
     }
 
     this.draw = function(ctx) {
         SpriteSheet.draw(ctx, 'ship', this.x, this.y, 1);
     }
 }
+
+var PlayerMissile = function(x, y) {
+    this.w = SpriteSheet.map['missile'].w;
+    this.h = SpriteSheet.map['missile'].h;
+
+    this.x = x - this.w/2;
+    this.y = y;
+    this.vy = -700;
+}
+
+PlayerMissile.prototype.step = function(dt) {
+    this.y += this.vy * dt;
+    if (this.y < -this.h)
+        this.board.remove(this);
+};
+
+PlayerMissile.prototype.draw = function(ctx) {
+    SpriteSheet.draw(ctx, 'missile', this.x, this.y);
+};
