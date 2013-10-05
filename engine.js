@@ -160,9 +160,79 @@ var GameBoard = function () {
   this.collide = function(obj, type) {
     return this.detect(function() {
       if (obj != this) {
-        var col = (!type || this.type & type) && this.overlap(obj, this);
+        var col = (!type || this.type & type) && board.overlap(obj, this);
         return col ? this : false;
       }
     });
   };
 }
+
+var Sprite = function () { };
+Sprite.prototype.setup = function (sprite, props) {
+  this.sprite = sprite;
+  this.merge(props);
+  this.frame = this.frame || 0;
+  this.w = SpriteSheet.map[this.sprite].w;
+  this.h = SpriteSheet.map[this.sprite].h;
+}
+
+Sprite.prototype.merge = function (props) {
+  if (props) {
+    for (var prop in props) {
+      this[prop] = props[prop];
+    }
+  }  
+}
+
+Sprite.prototype.draw = function (ctx) {
+  SpriteSheet.draw(ctx, this.sprite, this.x, this.y, this.frame);
+}
+
+Sprite.prototype.hit = function (damage) {
+  this.board.remove(this);
+}
+
+function Level(levelData, callback) {
+  this.levelData = [];
+  for (var i = 0; i < levelData.length; i++) {
+    this.levelData.push(Object.create(levelData[i]));
+  }
+  this.t = 0;
+  this.callback = callback;
+}
+
+Level.prototype.step = function (dt) {
+  var curship = null, idx = 0, remove = [];
+  
+  this.t += dt*1000;
+  
+  while ((curship = this.levelData[idx]) &&
+         curship[0] < this.t + 2000) {
+    if (this.t > curship[1]) {
+      remove.push(curship);
+    } else if (curship[0] < this.t) {
+      var enemy = enemies[curship[3]];
+      var override = curship[4];
+      
+      this.board.add(new Enemy(enemy, override));
+      
+      curship[0] += curship[2];
+    }
+    idx++;
+  }
+  
+  for (var i = 0, len = remove.length; i < len; i++) {
+    var idx = this.levelData.indexOf(remove[i]);
+    if (idx != -1) {
+      this.levelData.splice(idx, 1);
+    }
+  }
+  
+  if (this.levelData.length === 0 && this.board.cnt[OBJECT_ENEMY] === 0) {
+    if (this.callback) {
+      callback();
+    }
+  }
+}
+
+Level.prototype.draw = function (ctx) {};
