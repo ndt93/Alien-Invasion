@@ -206,6 +206,7 @@ Level.prototype.step = function (dt) {
   
   this.t += dt*1000;
   
+   // Start,    End, Gap,  Type,   Override
   while ((curship = this.levelData[idx]) &&
          curship[0] < this.t + 2000) {
     if (this.t > curship[1]) {
@@ -230,7 +231,7 @@ Level.prototype.step = function (dt) {
   
   if (this.levelData.length === 0 && this.board.cnt[OBJECT_ENEMY] === 0) {
     if (this.callback) {
-      callback();
+      this.callback();
     }
   }
 }

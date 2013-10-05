@@ -26,10 +26,11 @@ var sprites =  {
     explosion: { sx: 0, sy: 64, w: 64, h: 64, frames: 12},
 };
 
+//vx = A + B * sin(C*t + D); vy = E + F * sin(G*t + H)
 var enemies = {
     straight: { x: 0,   y: -50, sprite: 'enemy_ship', health: 10,  E: 100 },
     ltr:      { x: 0,   y: -100, sprite: 'enemy_purple', health: 10, B: 200, C: 1, E: 200  },
-    circle:   { x: 400,   y: -50, sprite: 'enemy_circle', health: 10, A: 0,  B: -200, C: 1, E: 20, F: 200, G: 1, H: Math.PI/2 },
+    circle:   { x: 400, y: -50, sprite: 'enemy_circle', health: 10, A: 0,  B: -200, C: 1, E: 20, F: 200, G: 1, H: Math.PI/2 },
     wiggle:   { x: 100, y: -50, sprite: 'enemy_bee', health: 20, B: 100, C: 4, E: 100 },
     step:     { x: 0,   y: -50, sprite: 'enemy_circle', health: 10, B: 300, C: 1.5, E: 60 }
 };
