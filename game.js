@@ -109,7 +109,7 @@ var PlayerShip = function () {
     this.setup('ship', { vx: 0, reloadTime: 0.25, frame: 1, maxVel: 200, });
     
     this.x = Game.width/2 - this.w / 2;
-    this.y = Game.height - 10 - this.h;
+    this.y = Game.height - Game.playerOffset - this.h;
     this.reload = this.reloadTime;
 
     this.step = function(dt) {
